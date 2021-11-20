@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 import 'package:adb_wifi/Classes/PreferenceUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,8 +15,11 @@ class _HomePageState extends State<HomePage> {
   static const methodChannel = const MethodChannel('com.adbwifi/adbwifichannel');
 
   String actualButtonOnOffString = "START";
-  Color actualButtonColor = Colors.grey;
   String message = 'adb wifi STOPPED';
+
+  Color buttonOnColor = Colors.teal.shade700;
+  Color buttonOffColor = Colors.blueGrey.shade300;
+  Color actualButtonColor = Colors.blueGrey.shade300;
 
   bool isSwitched = PreferenceUtils.getBool("IsSwitched", false);
   bool isStarted = PreferenceUtils.getBool("IsStarted", false);
@@ -46,7 +50,7 @@ class _HomePageState extends State<HomePage> {
 
             setState(() {
               actualButtonOnOffString = "STOP";
-              actualButtonColor = Colors.green;
+              actualButtonColor = buttonOnColor;
               message = 'On your computer run\nadb connect '+internalIP+':5555';
             });
 
@@ -72,7 +76,7 @@ class _HomePageState extends State<HomePage> {
 
         setState(() {
           actualButtonOnOffString = "START";
-          actualButtonColor = Colors.grey;
+          actualButtonColor = buttonOffColor;
           message = 'adb wifi STOPPED';
         });
 
@@ -107,7 +111,7 @@ class _HomePageState extends State<HomePage> {
     if(isStarted == true){
       setState(() {
         actualButtonOnOffString = "STOP";
-        actualButtonColor = Colors.green;
+        actualButtonColor = buttonOnColor;
         message = 'On your computer run\nadb connect '+internalIP+':5555';
       });
     }
@@ -127,18 +131,41 @@ class _HomePageState extends State<HomePage> {
                 flex: 0,
                 child: Container(
                     margin: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.0),
-                    child: MaterialButton(
-                      onPressed: () {
-                        startAdbWifiButtonClick(context);
-                      },
-                      color: actualButtonColor,
-                      textColor: Colors.white,
-                      child: Text(actualButtonOnOffString),
-                      padding: EdgeInsets.all(50),
-                      shape: CircleBorder(),
-                      elevation: 50.0,
-                    )
-                )
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(actualButtonColor),
+                      padding: MaterialStateProperty.all(EdgeInsets.all(40)),
+                      shape: MaterialStateProperty.all(CircleBorder()),
+                      elevation: MaterialStateProperty.all(50),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Column(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(0,0,0,10),
+                              child: Icon(
+                                Icons.power_settings_new,
+                                color: Colors.white,
+                                size: 35,
+                              ),
+                            ),
+                            Text(
+                              actualButtonOnOffString,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    onPressed: () { startAdbWifiButtonClick(context); },
+                  ),
+                ),
             ),
             Expanded(
               flex: 0,
@@ -148,7 +175,7 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Keep Screen ON'),
+                    Text('Keep Screen ON', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.black54),),
                     Switch(
                       value: isSwitched,
                       onChanged: (value) async{
@@ -166,8 +193,8 @@ class _HomePageState extends State<HomePage> {
                           isSwitched = value;
                         });
                       },
-                      activeTrackColor: Colors.lightGreenAccent,
-                      activeColor: Colors.green,
+                      activeTrackColor: Colors.teal.shade200,
+                      activeColor: Colors.teal,
                     ),
                   ],
                 ),
@@ -175,7 +202,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Expanded(
               flex: 0,
-              child: Text(message),
+              child: Text(message, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.black54),),
             ),
           ],
         ),
