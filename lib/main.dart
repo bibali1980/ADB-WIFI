@@ -17,11 +17,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'ADB Wifi',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('ADB Wifi'),
+          backgroundColor: Colors.teal,
+          leading: Icon(Icons.android),
+          elevation: 10,
+        ),
+        body: HomePage(),
       ),
-      home: HomePage(),
     );
   }
 }

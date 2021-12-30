@@ -28,8 +28,8 @@ class _HomePageState extends State<HomePage> {
   void startAdbWifiButtonClick(BuildContext context) async{
     try{
       if(isStarted == false){
-        bool isRooted = await Root.isRooted();
-        if(isRooted){
+        bool? isRooted = await Root.isRooted();
+        if(isRooted!){
 
           String internalIP = '';
           for (var interface in await NetworkInterface.list()) {
@@ -180,9 +180,9 @@ class _HomePageState extends State<HomePage> {
                       value: isSwitched,
                       onChanged: (value) async{
                         if(value == true){
-                          List<dynamic> data = <dynamic>[];
+                          List<dynamic>? data = <dynamic>[];
                           data = await methodChannel.invokeMethod("isWriteSettingsAllowed");
-                          if(data[0].toString() == 'true'){
+                          if(data![0].toString() == 'true'){
                             isSwitched = value;
                             PreferenceUtils.setBool("IsSwitched", isSwitched);
                           }else{
